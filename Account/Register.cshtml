@@ -1,0 +1,93 @@
+﻿@using System.IO;
+
+@{
+    Layout="~/Shared/_Layout.cshtml";
+    if(WebSecurity.IsAuthenticated) {
+        Response.Redirect("~/");
+    }
+    Page.Title = "Registration Page";
+}
+
+@{
+    if(IsPost) {
+        var Username = Request.Form["Username"];
+        var Password = Request.Form["Password"];
+        var RPassword = Request.Form["Retype_Password"];
+        var errorMessage = " ";
+
+        if(Username.IsEmpty()) {
+            ModelState.AddError("Username", "You must specify a username.");
+        }
+        if(Password.IsEmpty()) {
+            ModelState.AddError("Password", "You must provide your password");
+        }    
+        if(RPassword.IsEmpty()) {
+            ModelState.AddError("Retype_Password", "You must provide your password");
+        }  
+        if(!Password.Equals(RPassword)) {
+            ModelState.AddError("Main_Message", "Passwords didnot match!");
+        }     
+        if(!ModelState.IsValid){
+            ModelState.AddError("Main_Message", "Please fix the errors below before resubmitting the form");
+        } else {
+            if(WebSecurity.UserExists(Username)) {
+                ModelState.AddError("Username", "Username already exists.");
+           } else {
+                WebSecurity.CreateUserAndAccount(Username, Password, null, false);
+                
+                string[] Dir = new string[4];
+                Dir[0] = "Column";
+                Dir[1] = "Pie";
+                Dir[2] = "FastLine";
+                Dir[3] = "Spline";
+
+                for(var i = 0; i < 4; i++) {
+                    var Folder = "~\\UserCharts\\"+Username+"\\"+Dir[i];
+                    bool IsExists = System.IO.Directory.Exists(Server.MapPath(Folder));
+                    if(!IsExists) {
+                        System.IO.Directory.CreateDirectory(Server.MapPath(Folder));
+                    }
+                }  
+                WebSecurity.Login(Username, Password, true);
+                errorMessage = String.Format("{0} created.", Username);
+           }
+        }
+    }
+}
+<!-- Contact Form -->
+<div class="contact-form" style="display: block; width: 190px; margin: 1px auto;">
+    <form method="post">
+    @Html.ValidationSummary(true)
+    @Html.ValidationMessage("Main_Message")
+    <table >
+        <tr>
+            <td>@Html.ValidationMessage("Username")</td>        
+        </tr>
+        <tr>
+            <td><label>Username</label>
+                <input type="text" placeholder="Username" name="Username" />                
+            </td>  
+        </tr>
+        <tr>
+            <td>@Html.ValidationMessage("Password")</td>        
+        </tr>
+        <tr>
+            <td><label>Password</label>
+                <input type="password" placeholder="Password" name="Password" />                
+            </td>
+        </tr> 
+        <tr>
+            <td>@Html.ValidationMessage("Retype_Password")</td>        
+        </tr>
+        <tr>
+            <td><label>Retype Password</label>
+                <input type="password" placeholder="Retype Password" name="Retype_Password" />                
+            </td>
+        </tr>    
+        <tr>
+            <td><input type="submit" value="Submit" class="button blue-darkgray"/>
+            <input type="button" onclick="location.href='Login.cshtml'" value="Login" class="button blue-darkgray"/></td>        
+        </tr>
+    </table>
+    </form> 
+</div>

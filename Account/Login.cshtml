@@ -1,0 +1,59 @@
+﻿@{
+    Layout="~/Shared/_Layout.cshtml";
+    Page.Title = "Login";
+}
+
+@{
+    if(IsPost) {
+        var Username = Request.Form["Username"];
+        var Password = Request.Form["Password"];
+        
+        if (Username.IsEmpty()) {
+            ModelState.AddError("Username", "You must specify a username.");
+        }
+        if (Password.IsEmpty()) {
+            ModelState.AddError("Password", "You must provide your password");
+        }   
+        
+        if(!ModelState.IsValid){
+            ModelState.AddError("Error", "Please fix the errors below before resubmitting the form");
+        } else { 
+            if (WebSecurity.Login(Username, Password)) {
+                Response.Redirect("~/");
+            } else {
+                ModelState.AddError("Error", "Username and Password didn't match. Please try again"); 
+            }
+        }    
+    }
+}
+
+<!-- Contact Form -->
+
+<form method="post">
+    @Html.ValidationSummary(true)
+    @Html.ValidationMessage("Error")
+    <div id="contact-form" class="center" style="display: block; width: 250px; margin: 1px auto;">
+        <table>
+        <tr>
+            <td>@Html.ValidationMessage("Username")</td>        
+        </tr>
+        <tr>
+            <td><label>Username</label>
+                <input type="text" placeholder="Username" name="Username" />                
+            </td>  
+        </tr>
+        <tr>
+            <td>@Html.ValidationMessage("Password")</td>        
+        </tr>
+        <tr>
+            <td><label>Password</label>
+                <input type="password" placeholder="Password" name="Password" />                
+            </td>
+        </tr>
+    </table>
+        </div>
+    <div class="center" style="display: block; width: 200px; margin: 1px auto;">
+        <input type="submit" value="Login" class="button blue-darkgray"/>
+        <input type="button" onClick="location.href='Register.cshtml'" value="Register" class="button blue-darkgray"/>
+    </div>
+</form> 
