@@ -1,6 +1,6 @@
 {
   "name": "Query Charter",
   "tagline": "To make dataset look more humanly",
-  "body": "### Query Charter is Web application developed to provide results of all types of charts and diagrams, representing a specific dataset from database build on the latest technology Razor .",
+  "body": "## Query Charter is Web application developed to provide results of all types of charts and diagrams, representing a specific dataset from database build on the latest technology Razor .\r\n\r\nThe main objective of any organization which stores information in database is to generate reports from them and represent them using either Bar Graph, Pie Charts etc. so that they can analyse the data. In order to generate these reports we have many report generating tools but the problem with these tools is, we need to learn how to use them and also we need to perform lot of steps in order to generate simple reports. So for DBA, who just know how to write queries should learn and perform many steps in order to generate simple reports. This is the reason why Query Charter is developed. ",
   "note": "Don't delete this file! It's used internally to help with page regeneration."
 }
